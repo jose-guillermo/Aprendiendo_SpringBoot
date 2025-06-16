@@ -1,9 +1,16 @@
 C:\SpringBoot\Spring\springboot-crud\src\main\java\com\jose\curso\springboot\app\springboot_crud\AppConfig.java
 C:\SpringBoot\Spring\springboot-crud\src\main\java\com\jose\curso\springboot\app\springboot_crud\controllers\ProductController.java
 C:\SpringBoot\Spring\springboot-crud\src\main\java\com\jose\curso\springboot\app\springboot_crud\controllers\UserController.java
+C:\SpringBoot\Spring\springboot-crud\src\main\java\com\jose\curso\springboot\app\springboot_crud\DataInitializer.java
+C:\SpringBoot\Spring\springboot-crud\src\main\java\com\jose\curso\springboot\app\springboot_crud\dto\ProductDto.java
+C:\SpringBoot\Spring\springboot-crud\src\main\java\com\jose\curso\springboot\app\springboot_crud\dto\UserDto.java
 C:\SpringBoot\Spring\springboot-crud\src\main\java\com\jose\curso\springboot\app\springboot_crud\entities\Product.java
 C:\SpringBoot\Spring\springboot-crud\src\main\java\com\jose\curso\springboot\app\springboot_crud\entities\Role.java
 C:\SpringBoot\Spring\springboot-crud\src\main\java\com\jose\curso\springboot\app\springboot_crud\entities\User.java
+C:\SpringBoot\Spring\springboot-crud\src\main\java\com\jose\curso\springboot\app\springboot_crud\entities\UserRole.java
+C:\SpringBoot\Spring\springboot-crud\src\main\java\com\jose\curso\springboot\app\springboot_crud\entities\UserRoleId.java
+C:\SpringBoot\Spring\springboot-crud\src\main\java\com\jose\curso\springboot\app\springboot_crud\Exceptions\GlobalExceptionHandler.java
+C:\SpringBoot\Spring\springboot-crud\src\main\java\com\jose\curso\springboot\app\springboot_crud\Exceptions\ResourceNotFoundException.java
 C:\SpringBoot\Spring\springboot-crud\src\main\java\com\jose\curso\springboot\app\springboot_crud\ProductValidation.java
 C:\SpringBoot\Spring\springboot-crud\src\main\java\com\jose\curso\springboot\app\springboot_crud\repositories\ProductRepository.java
 C:\SpringBoot\Spring\springboot-crud\src\main\java\com\jose\curso\springboot\app\springboot_crud\repositories\RoleRepository.java
