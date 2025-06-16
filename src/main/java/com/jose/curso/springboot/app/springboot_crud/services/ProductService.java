@@ -3,18 +3,24 @@ package com.jose.curso.springboot.app.springboot_crud.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.jose.curso.springboot.app.springboot_crud.dto.ProductDto;
 import com.jose.curso.springboot.app.springboot_crud.entities.Product;
 
 public interface ProductService {
-    List<Product> findAll();
+    // List<Product> findAll();
+    List<ProductDto> findAll();
 
-    Optional<Product> findById(Long id);
+    // Optional<Product> findById(Long id);
+    ProductDto findById(Long id);
 
-    Product save(Product product);
+    // Product save(Product product);
+    ProductDto save(ProductDto product);
 
-    Optional<Product> update(Long id, Product product);
+    // Optional<Product> update(Long id, Product product);
+    ProductDto update(Long id, ProductDto product);
 
-    Optional<Product> delete(Long id);
+    // Optional<Product> delete(Long id);
+    ProductDto delete(Long id);
     
     boolean existsBySku(String sku);
 }

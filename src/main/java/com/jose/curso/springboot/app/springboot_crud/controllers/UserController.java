@@ -12,7 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jose.curso.springboot.app.springboot_crud.entities.User;
+import com.jose.curso.springboot.app.springboot_crud.dto.UserDto;
 import com.jose.curso.springboot.app.springboot_crud.services.UserService;
 
 import jakarta.validation.Valid;
@@ -33,13 +33,15 @@ public class UserController {
 
     
     @GetMapping
-    public List<User> list() {
+    // public List<User> list() {
+    public List<UserDto> list() {
         return service.findAll();
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> create(@Valid @RequestBody User user, BindingResult result) {
+    // @PreAuthorize("hasRole('ADMIN')")
+    // public ResponseEntity<?> create(@Valid @RequestBody User user, BindingResult result) {
+    public ResponseEntity<?> create(@Valid @RequestBody UserDto user, BindingResult result) {
         if (result.hasFieldErrors()) {
             return validation(result);
         }
@@ -47,7 +49,8 @@ public class UserController {
     };
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody User user, BindingResult result) {
+    // public ResponseEntity<?> register(@Valid @RequestBody User user, BindingResult result) {
+    public ResponseEntity<?> register(@Valid @RequestBody UserDto user, BindingResult result) {
         user.setAdmin(false);
         return create(user, result);
     };
