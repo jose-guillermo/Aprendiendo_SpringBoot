@@ -3,7 +3,7 @@ package com.jose.curso.springboot.app.springboot_crud.controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+// import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jose.curso.springboot.app.springboot_crud.dto.ProductDto;
+import com.jose.curso.springboot.app.springboot_crud.dto.ProductUpdateDto;
 // import com.jose.curso.springboot.app.springboot_crud.ProductValidation;
 // import com.jose.curso.springboot.app.springboot_crud.entities.Product;
 import com.jose.curso.springboot.app.springboot_crud.services.ProductService;
@@ -88,7 +89,7 @@ public class ProductController {
     //     }
     //     return ResponseEntity.notFound().build();
     // }
-    public ResponseEntity<?> update(@Valid @RequestBody ProductDto productDto, BindingResult result, @PathVariable Long id) {
+    public ResponseEntity<?> update(@Valid @RequestBody ProductUpdateDto productDto, BindingResult result, @PathVariable Long id) {
         // validation.validate(product, result);
         if (result.hasFieldErrors()) {
             return validation(result);

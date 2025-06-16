@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jose.curso.springboot.app.springboot_crud.Exceptions.ResourceNotFoundException;
 import com.jose.curso.springboot.app.springboot_crud.dto.ProductDto;
+import com.jose.curso.springboot.app.springboot_crud.dto.ProductUpdateDto;
 import com.jose.curso.springboot.app.springboot_crud.entities.Product;
 import com.jose.curso.springboot.app.springboot_crud.repositories.ProductRepository;
 
@@ -69,7 +70,7 @@ public class ProductServiceImpl implements ProductService{
         
     //     return productOptional;
     // }
-    public ProductDto update(Long id, ProductDto productDto) {
+    public ProductDto update(Long id, ProductUpdateDto productDto) {
         Product product = repository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Producto con id " + id + " no encontrado"));
 

@@ -3,7 +3,7 @@ package com.jose.curso.springboot.app.springboot_crud.services;
 import java.util.List;
 
 import com.jose.curso.springboot.app.springboot_crud.dto.UserDto;
-import com.jose.curso.springboot.app.springboot_crud.entities.User;
+// import com.jose.curso.springboot.app.springboot_crud.entities.User;
 
 public interface UserService {
 
