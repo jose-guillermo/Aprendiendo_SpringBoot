@@ -13,16 +13,17 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import com.jose.curso.springboot.app.springboot_crud.security.filter.JwtAuthentitcationFilter;
-import com.jose.curso.springboot.app.springboot_crud.security.filter.JwtValidationFilter;
+import com.jose.curso.springboot.app.springboot_crud.security.filter.JwtRefreshTokenValidationFilter;
+import com.jose.curso.springboot.app.springboot_crud.services.UserService;
+import com.jose.curso.springboot.app.springboot_crud.security.filter.JwtAccessTokenValidationFilter;
 
 @Configuration
 @EnableMethodSecurity(prePostEnabled=true)
@@ -31,33 +32,39 @@ public class SpringSecurityConfig {
     @Autowired
     private AuthenticationConfiguration authenticationConfiguration;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired 
+    private JwtService jwtService;
+
     @Bean
     AuthenticationManager authenticationManager() throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+    SecurityFilterChain filterChain(HttpSecurity http, CustomAccessDeniedHandler accessDeniedHandler) throws Exception{
         return http.authorizeHttpRequests( authz -> authz
             .requestMatchers(                                                                                                                                        HttpMethod.GET,"/api/users").permitAll()
             .requestMatchers(HttpMethod.POST,"/api/users/register").permitAll()
-            .requestMatchers(HttpMethod.POST,"/api/users").permitAll()
             // .requestMatchers(HttpMethod.POST,"/api/users").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST,"/refresh").permitAll()
+            // .requestMatchers(HttpMethod.POST,"/api/users").permitAll()
             // .requestMatchers(HttpMethod.POST,"/api/products").hasRole("ADMIN")
             // .requestMatchers(HttpMethod.GET,"/api/products", "/api/products/{id}").hasAnyRole("ADMIN", "USER")
             // .requestMatchers(HttpMethod.PUT,"/api/products/{id}").hasRole("ADMIN")
             // .requestMatchers(HttpMethod.DELETE,"/api/products/{id}").hasRole("ADMIN")
             .anyRequest().authenticated()
-        ).addFilter(new JwtAuthentitcationFilter(authenticationManager()))
-            .addFilter(new JwtValidationFilter(authenticationManager()))
+        ).addFilter(new JwtAuthentitcationFilter(authenticationManager(), jwtService))
+            .addFilter(new JwtAccessTokenValidationFilter(authenticationManager(), jwtService))
+            .addFilterBefore(new JwtRefreshTokenValidationFilter(authenticationManager(), jwtService, userService), UsernamePasswordAuthenticationFilter.class)
             .csrf(config -> config.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .exceptionHandling(ex -> ex
+                .accessDeniedHandler(accessDeniedHandler)
+            )
             .build();
     }                                                       
 

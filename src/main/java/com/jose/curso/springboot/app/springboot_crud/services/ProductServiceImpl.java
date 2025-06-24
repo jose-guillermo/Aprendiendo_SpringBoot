@@ -11,6 +11,7 @@ import com.jose.curso.springboot.app.springboot_crud.Exceptions.ResourceNotFound
 import com.jose.curso.springboot.app.springboot_crud.dto.ProductDto;
 import com.jose.curso.springboot.app.springboot_crud.dto.ProductUpdateDto;
 import com.jose.curso.springboot.app.springboot_crud.entities.Product;
+import com.jose.curso.springboot.app.springboot_crud.mappers.ProductMapper;
 import com.jose.curso.springboot.app.springboot_crud.repositories.ProductRepository;
 
 @Service
@@ -19,6 +20,9 @@ public class ProductServiceImpl implements ProductService{
     @Autowired
     private ProductRepository repository;
 
+    @Autowired
+    private ProductMapper productMapper;
+
     @Transactional(readOnly = true)
     @Override
     // public List<Product> findAll() {
@@ -26,7 +30,7 @@ public class ProductServiceImpl implements ProductService{
     // }
      public List<ProductDto> findAll() {
         List<Product> products = (List<Product>) repository.findAll();
-        return products.stream().map(ProductDto::new).toList();
+        return products.stream().map(productMapper::productToProductDto).toList();
     }
 
     @Transactional(readOnly = true)
@@ -37,9 +41,9 @@ public class ProductServiceImpl implements ProductService{
     public ProductDto findById(Long id) {
         Optional<Product> product = repository.findById(id);
         if(product.isPresent()){
-            return new ProductDto(product.get());
+            return productMapper.productToProductDto(product.get());
         } else {
-            throw new ResourceNotFoundException("Usuario con id " + id + "no encontrado");
+            throw new ResourceNotFoundException("El producto con id " + id + " no existe");
         }
     }
 
@@ -49,13 +53,9 @@ public class ProductServiceImpl implements ProductService{
     //     return repository.save(product);
     // }
     public ProductDto save(ProductDto productDto) {
-        Product product = new Product();
-        product.setDescription(productDto.getDescription());
-        product.setName(productDto.getName());
-        product.setPrice(productDto.getPrice());
-        product.setSku(productDto.getSku());
+        Product product = productMapper.productDtoToProduct(productDto);
 
-        return new ProductDto(repository.save(product));
+        return productMapper.productToProductDto(repository.save(product));
     }
 
     @Transactional
@@ -74,12 +74,9 @@ public class ProductServiceImpl implements ProductService{
         Product product = repository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Producto con id " + id + " no encontrado"));
 
-        product.setDescription(productDto.getDescription());
-        product.setName(productDto.getName());
-        product.setPrice(productDto.getPrice());
-        product.setSku(productDto.getSku());
+        productMapper.updateProductFromDto(productDto, product);
         
-        return new ProductDto(repository.save(product));
+        return productMapper.productToProductDto(repository.save(product));
     }
 
     @Transactional
@@ -95,7 +92,7 @@ public class ProductServiceImpl implements ProductService{
         Product product = repository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Producto con id " + id + " no encontrado"));
         repository.delete(product);
-        return new ProductDto(product);
+        return productMapper.productToProductDto(product);
     }
 
     @Override

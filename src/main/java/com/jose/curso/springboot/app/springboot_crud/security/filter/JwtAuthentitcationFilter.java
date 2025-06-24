@@ -2,10 +2,11 @@ package com.jose.curso.springboot.app.springboot_crud.security.filter;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,22 +18,24 @@ import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jose.curso.springboot.app.springboot_crud.entities.User;
+import com.jose.curso.springboot.app.springboot_crud.security.JwtService;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import static com.jose.curso.springboot.app.springboot_crud.security.TokenJwtConfig.*;
+import static com.jose.curso.springboot.app.springboot_crud.security.JwtService.*;
 
 public class JwtAuthentitcationFilter extends UsernamePasswordAuthenticationFilter{
 
     private AuthenticationManager authenticationManager;
 
-    public JwtAuthentitcationFilter(AuthenticationManager authenticationManager) {
+    private JwtService jwtService;
+
+    public JwtAuthentitcationFilter(AuthenticationManager authenticationManager, JwtService jwtService) {
         this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -67,28 +70,25 @@ public class JwtAuthentitcationFilter extends UsernamePasswordAuthenticationFilt
         String username = user.getUsername();
         Collection<? extends GrantedAuthority> roles = authResult.getAuthorities();
 
-        Claims claims = Jwts.claims()
-            .add("authorities", new ObjectMapper().writeValueAsString(roles))
-            .add("username", username)
-            .build();
+        List<String> roleNames = roles.stream().map(GrantedAuthority::getAuthority).toList();
 
-        String token = Jwts.builder()
-            .subject(username)
-            .claims(claims)
-            .expiration(new Date(System.currentTimeMillis() + 3600000))
-            .issuedAt(new Date())
-            .signWith(SECRET_KEY)
-            .compact();
+        String accessToken = jwtService.createAccessToken(username, roleNames);
+        String refreshToken = jwtService.createRefreshToken(username);
 
-        response.addHeader(HEADER_AUTHORIZATION, PREFIX_TOKEN + token);
+        ResponseCookie accessJwtCookie = jwtService.createAccessCookie(accessToken);
+        ResponseCookie refreshJwtCookie = jwtService.createRefreshCookie(refreshToken);
+        
+        response.addHeader("Set-cookie", accessJwtCookie.toString());
+        response.addHeader("Set-cookie", refreshJwtCookie.toString());
+        // response.addHeader(HEADER_AUTHORIZATION, PREFIX_TOKEN + token);
 
         Map<String, String> body = new HashMap<>();
-        body.put("token", token);
+        // body.put("token", token);
         body.put("username", username);
         body.put("message", String.format("Hola %s has iniciado sesión con exito!", username));
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         response.setContentType(CONTENT_TYPE);
-        response.setStatus(200);
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     @Override

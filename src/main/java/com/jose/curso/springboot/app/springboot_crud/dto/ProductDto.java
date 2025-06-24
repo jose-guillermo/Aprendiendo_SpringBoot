@@ -1,6 +1,5 @@
 package com.jose.curso.springboot.app.springboot_crud.dto;
 
-import com.jose.curso.springboot.app.springboot_crud.entities.Product;
 import com.jose.curso.springboot.app.springboot_crud.validation.IsExistsDb;
 import com.jose.curso.springboot.app.springboot_crud.validation.IsRequired;
 
@@ -28,17 +27,6 @@ public class ProductDto {
     // @NotBlank(message = "{NotBlank.product.description}")
     @IsRequired
     private String description;
-
-    public ProductDto() {
-    }
-
-    public ProductDto(Product product) {
-        this.id = product.getId();
-        this.sku = product.getSku();
-        this.name = product.getName();
-        this.price = product.getPrice();
-        this.description = product.getDescription();
-    }
 
     public Long getId() {
         return id;

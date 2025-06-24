@@ -10,6 +10,8 @@ public interface UserService {
     // List<User> findAll();
     List<UserDto> findAll();
 
+    UserDto findByUsername(String username);
+
     // User save(User user);
     UserDto save(UserDto user);
 

@@ -3,8 +3,6 @@ package com.jose.curso.springboot.app.springboot_crud.dto;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.jose.curso.springboot.app.springboot_crud.entities.Role;
-import com.jose.curso.springboot.app.springboot_crud.entities.User;
 import com.jose.curso.springboot.app.springboot_crud.validation.ExistsByUserName;
 
 import jakarta.validation.constraints.NotBlank;
@@ -26,19 +24,9 @@ public class UserDto {
 
     private boolean enabled;
     private List<String> roles;
-    
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private boolean admin;
-
-    public UserDto() {
-    }
-    
-    public UserDto(User user) {
-        this.id = user.getId();
-        this.username = user.getUsername();
-        this.enabled = user.isEnabled();
-        this.roles = user.getRoles().stream().map(Role::getName).toList();
-    }
 
     public Long getId() {
         return id;
@@ -76,5 +64,4 @@ public class UserDto {
     public void setAdmin(boolean admin) {
         this.admin = admin;
     }
-    
 }
