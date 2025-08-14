@@ -63,24 +63,22 @@ public class JwtService {
     public ResponseCookie createAccessCookie(String accessToken) {
         return ResponseCookie.from(COOKIE_ACCESS_TOKEN, accessToken)
             .httpOnly(true)
-            .secure(false)
             .secure(true)
             .path("/")
-            .maxAge(3600)
+            .maxAge(3600 * 5)
             .sameSite("None")
-            .domain("https://aprendiendo-springboot.onrender.com")
+            // .domain("localhost")
             .build();
     }
 
     public ResponseCookie createRefreshCookie(String refreshToken) {
         return ResponseCookie.from(COOKIE_REFRESH_TOKEN, refreshToken)
             .httpOnly(true)
-            .secure(false)
             .secure(true)
             .path("/")
-            .maxAge(3600)
+            .maxAge(3600 * 24 * 7)
             .sameSite("None")
-            .domain("https://aprendiendo-springboot.onrender.com")
+            // .domain("localhost")
             .build();
     }
 

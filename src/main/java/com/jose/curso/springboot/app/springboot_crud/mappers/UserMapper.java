@@ -17,7 +17,7 @@ public interface UserMapper {
     User userDtoToUser(UserDto user);
 
     default String mapRoleToString(Role role) {
-        return role.getName(); // Suponiendo que Role tiene un método getName()
+        return role.getName();
     }
 
     default Role mapStringToRole(String roleName) {
